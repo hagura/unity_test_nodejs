@@ -1199,46 +1199,47 @@ var UnityObject2 = function (config) {
                         return;
                 }
             } else if (ua.ie) {
+                var activeXSupported = false;
                 try {
-                    var uo = new ActiveXObject("UnityWebPlayer.UnityWebPlayer.1");
-                    var pv = uo.GetPluginVersion();
-
-                    if (versions) {
-
-                        var v = {};
-
-                        for (var i = 0; i < versions.length; ++i) {
-
-                            v[versions[i]] = uo.GetUnityVersion(versions[i]);
-                        }
-
-                        v.plugin = pv;
+                    if (ActiveXObject.prototype != null) {
+                        activeXSupported = true;
                     }
+                } catch(e) {}
 
-                    status = kInstalled;
-                    // 2.5.0 auto update has issues on vista and later
-                    if (pv == "2.5.0f5") {
-
-                        var m = /Windows NT \d+\.\d+/.exec(nav.userAgent);
-
-                        if (m && m.length > 0) {
-
-                            var wv = parseFloat(m[0].split(' ')[2]);
-
-                            if (wv >= 6) {
-
-                                status = kBroken;
-                                data = "WIN-U2.5.0f5";
-                            }
-                        }
-                    }
-                } catch (ex) {
+                if (!activeXSupported || ua.x64) {
                     status = kUnsupported;
-                    if (ua.win && ua.ie && ua.x64) {
+                    if (ua.x64) {
                         data = "WIN-IEx64";
                     } else {
                         data = "ActiveXFailed";
                     }
+                } else {
+                    status = kMissing;
+                    try {
+                        var uo = new ActiveXObject("UnityWebPlayer.UnityWebPlayer.1");
+                        var pv = uo.GetPluginVersion();
+
+                        if (versions) {
+                            var v = {};
+                            for (var i = 0; i < versions.length; ++i) {
+                                v[versions[i]] = uo.GetUnityVersion(versions[i]);
+                            }
+                            v.plugin = pv;
+                        }
+
+                        status = kInstalled;
+                        // 2.5.0 auto update has issues on vista and later
+                        if (pv == "2.5.0f5") {
+                            var m = /Windows NT \d+\.\d+/.exec(nav.userAgent);
+                            if (m && m.length > 0) {
+                                var wv = parseFloat(m[0].split(' ')[2]);
+                                if (wv >= 6) {
+                                    status = kBroken;
+                                    data = "WIN-U2.5.0f5";
+                                }
+                            }
+                        }
+                    } catch(e) {}
                 }
             }
 

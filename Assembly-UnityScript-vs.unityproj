@@ -48,8 +48,11 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\behavior\behaviorButton.js" />
      <Compile Include="Assets\Scripts\behavior\behaviorCamera.js" />
+     <Compile Include="Assets\Scripts\behavior\behaviorCube.js" />
      <Compile Include="Assets\Scripts\behavior\behaviorSpawner.js" />
+     <Compile Include="Assets\Scripts\behavior\spawner.js" />
      <Compile Include="Assets\Scripts\gamecontroll.js" />
+     <Compile Include="Assets\behaviorPowerMeter.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
